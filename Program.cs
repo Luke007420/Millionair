@@ -41,6 +41,7 @@
                 Console.Write("Enter your choice: ");
                 choice = int.Parse(Console.ReadLine());
                 Console.Clear();
+                
 
                 switch (choice)
                 {
@@ -48,7 +49,7 @@
                         Displaystudent(student);// make it sort by last name
                         break;
                     case 2:
-                    //    task2(); break;
+                        Edit(student); break;
                     //case 3:
                     //    task3(); break;
                     //case 4:
@@ -74,15 +75,61 @@
             } while (choice != 0);
 
 
+            
+
         }
-        public static void Displaystudent(Students[] students)
+        public static void Displaystudent(Students[] student)
         {
+            //have to sort by last name
+
             Console.WriteLine("First Name:\t\tLast Name:\t\tInterests:");
-            for (int i = 0; i < students.Length; i++)
+            for (int i = 0; i < student.Length; i++)
             {
-                Console.WriteLine($"{students[i].firstname.PadRight(8)}\t\t{students[i].lastname.PadRight(8)}\t\t{students[i].interest.PadRight(8)}");
+                
+                Console.WriteLine($"{student[i].firstname.PadRight(8)}\t\t{student[i].lastname.PadRight(8)}\t\t{student[i].interest.PadRight(8)}");
             }
             Console.ReadLine();
+        }
+        public static void Chosen()
+        {
+
+        }
+        public static void Edit(Students[] student)
+        {
+            bool found = false;
+            Console.WriteLine("Enter the Last name of the person you would like to edit");
+            string wanted = Console.ReadLine();
+            for (int i = 0; i < student.Length; i++)
+            {
+                if (student[i].lastname == wanted)
+                {
+
+                    found = true;
+                    Console.WriteLine("Please enter their new interest");
+                    string newinterest = Console.ReadLine();
+                    student[i].interest = newinterest;
+
+                }
+
+            }
+            if (!found)
+            {
+                Console.WriteLine("The name does not exist in the list");
+                Console.ReadLine();
+            }
+            Writefile(student);
+        }
+        public static void Writefile(Students[] students)
+        {
+            StreamWriter sw = new StreamWriter(@"Millionaire.txt");
+            for (int i = 0; i < students.Length; i++)
+            {
+                sw.WriteLine(students[i].firstname);
+                sw.WriteLine(students[i].lastname);
+                sw.WriteLine(students[i].interest);
+
+            }
+            sw.Close();
         }
     }
 }
