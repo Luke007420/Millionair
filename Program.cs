@@ -1,4 +1,6 @@
-﻿namespace Millionaire
+﻿using System.Diagnostics;
+
+namespace Millionaire
 {
     public struct Students
     {
@@ -31,17 +33,48 @@
 
             do
             {
-                Console.Clear();
-                Console.WriteLine("=====Menu=====");
-                Console.WriteLine("1 : Display Students");
-                Console.WriteLine("2 : Edit player interest");//need to do
-                Console.WriteLine("3 : Finalists");//need to do refer to assigment brief find and list them
-                Console.WriteLine("4 : Start game");
-                Console.WriteLine("0 : to exit program");
-                Console.Write("Enter your choice: ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                PrintcenterArt(@"
+                     __          ___           __          __       _       _       
+                     \ \        / / |          \ \        / /      | |     | |      
+                      \ \  /\  / /| |__   ___   \ \  /\  / /_ _ __ | |_ ___| |      
+                       \ \/  \/ / | '_ \ / _ \   \ \/  \/ / _` | '_ \| __/ __| |     
+                        \  /\  /  | | | | (_) |   \  /\  / (_| | | | | |_\__ \_|     
+                         \/  \/   |_| |_|\___/     \/  \/ \__,_|_| |_|\__|___(_)     
+                    ");
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                PrintcenterArt(@"
+                      ████████╗ ██████╗     ██████╗ ███████╗     █████╗     
+                      ╚══██╔══╝██╔═══██╗    ██╔══██╗██╔════╝    ██╔══██╗    
+                         ██║   ██║   ██║    ██████╔╝█████╗      ███████║    
+                         ██║   ██║   ██║    ██╔══██╗██╔══╝      ██╔══██║    
+                         ██║   ╚██████╔╝    ██████╔╝███████╗    ██║  ██║    
+                         ╚═╝    ╚═════╝     ╚═════╝ ╚══════╝    ╚═╝  ╚═╝    
+                    ");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                PrintcenterArt(@"
+                      ███╗   ███╗██╗██╗     ██╗     ██╗ ██████╗ ███╗  ██╗ █████╗ ██╗██████╗ ███████╗
+                      ████╗ ████║██║██║     ██║     ██║██╔═══██╗████╗ ██║██╔══██╗██║██╔══██╗██╔════╝
+                      ██╔████╔██║██║██║     ██║     ██║██║   ██║██╔██╗██║███████║██║██████╔╝█████╗  
+                      ██║╚██╔╝██║██║██║     ██║     ██║██║   ██║██║╚████║██╔══██║██║██╔══██╗██╔══╝  
+                      ██║ ╚═╝ ██║██║███████╗███████╗██║╚██████╔╝██║ ╚███║██║  ██║██║██║  ██║███████╗
+                      ╚═╝     ╚═╝╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚══╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
+                    ");
+
+                Console.ResetColor();
+                Console.ResetColor();
+
+                Printcenter("=====Menu=====");
+                Printcenter("1 : Display Students");
+                Printcenter("2 : Edit player interest");//need to do
+                Printcenter("3 : Start game");
+                Printcenter("0 : to exit program");
+                Printcenter("Enter your choice: ");
                 choice = int.Parse(Console.ReadLine());
                 Console.Clear();
-                
+
 
                 switch (choice)
                 {
@@ -50,8 +83,8 @@
                         break;
                     case 2:
                         Edit(student); break;
-                    //case 3:
-                    //    task3(); break;
+                    case 3:
+                        Finalists(student); break;
                     //case 4:
                     //    task4(); break;
                     case 0:
@@ -75,18 +108,37 @@
             } while (choice != 0);
 
 
-            
+
 
         }
+        public static void Printcenter(string text)
+        {
+            int screenWidth = Console.WindowWidth;
+            int padding = (screenWidth + text.Length) / 2;
+            Console.WriteLine(text.PadLeft(padding));
+        }
+        public static void PrintcenterArt(string art)
+        {
+            foreach (string line in art.Split('\n'))
+            {
+                int screenWidth = Console.WindowWidth;
+                int padding = (screenWidth + line.Length) / 2;
+                Console.WriteLine(line.PadLeft(padding));
+            }
+        }
+
+
+
         public static void Displaystudent(Students[] student)
         {
             //have to sort by last name
+            var sortpeople = student.OrderBy(s => s.lastname);
 
             Console.WriteLine("First Name:\t\tLast Name:\t\tInterests:");
-            for (int i = 0; i < student.Length; i++)
+            foreach (var s in sortpeople)
             {
-                
-                Console.WriteLine($"{student[i].firstname.PadRight(8)}\t\t{student[i].lastname.PadRight(8)}\t\t{student[i].interest.PadRight(8)}");
+
+                Console.WriteLine($"{s.firstname.PadRight(8)}\t\t{s.lastname.PadRight(8)}\t\t{s.interest.PadRight(8)}");
             }
             Console.ReadLine();
         }
@@ -130,6 +182,54 @@
 
             }
             sw.Close();
+        }
+
+        public static void Finalists(Students[] students)
+        {
+            Random rand = new Random();
+            int[] chosen = new int[10];
+            int count = 0;
+
+            while (count < 10)
+            {
+                bool dublicate = false;
+                int final = rand.Next(0, students.Length);
+                for (int i = 0; i <count; i++)
+                {
+                    if (chosen[i] == final)
+                    {
+                        dublicate = true;
+                    }
+    
+                }
+                if (!dublicate)
+                {
+                    chosen[count] = final;
+                    count++;
+                }
+            }
+            Console.WriteLine("We are getting your finalists...");
+            Thread.Sleep(2000);
+            Console.WriteLine("These are your finalists");
+            Console.WriteLine("First Name:\t\tLast Name:\t\tInterests:");
+            for (int i = 0; i < 10; i++)
+            {
+                
+                Console.WriteLine($"{students[chosen[i]].firstname.PadRight(8)}\t\t{students[chosen[i]].lastname.PadRight(8)}\t\t{students[chosen[i]].interest.PadRight(8)}");
+                
+            }
+            Console.ReadLine();
+            Thread.Sleep(2000);
+
+
+            
+
+            
+
+
+
+
+
         }
     }
 }
