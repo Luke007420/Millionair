@@ -220,6 +220,8 @@ namespace Millionaire
             }
             Console.ReadLine();
             Thread.Sleep(2000);
+            Console.WriteLine("This is your finalists");
+            
 
 
             
