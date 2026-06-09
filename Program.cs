@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 
 namespace Millionaire
 {
@@ -97,6 +98,7 @@ namespace Millionaire
                 Printcenter("3 : Start game");
                 Printcenter("0 : to exit program");
                 Printcenter("Enter your choice: ");
+                Console.SetCursorPosition(70, 29);
                 choice = int.Parse(Console.ReadLine());
                 Console.Clear();
 
@@ -109,9 +111,7 @@ namespace Millionaire
                     case 2:
                         Edit(student); break;
                     case 3:
-                        Finalists(student,questions); break;
-                    //case 4:
-                    //    task4(); break;
+                        Finalists(student, questions); break;
                     case 0:
                         Console.WriteLine("Exiting the program!!");
                         break;
@@ -225,7 +225,12 @@ namespace Millionaire
             Students newfinal = shuffled[rand.Next(10)];//picks one out of random of the shuffled students we set earlier
             Console.WriteLine($"{newfinal.firstname}\t\t\t{newfinal.lastname}\t\t\t{newfinal.interest}");
             Console.ReadLine();
+            Startgame(questions, newfinal);
 
+        }
+        public static void Startgame(Question[] questions, Students newfinal)
+        {
+            Random rand = new Random();
             string[] ladder =
             {
                 "$100", "$200", "$300", "$500", "$1,000",
@@ -237,25 +242,25 @@ namespace Millionaire
             int[] safeHavens = { 4, 9 };
             Question[] shuffledQ = questions.OrderBy(q => rand.Next()).ToArray();
 
-            int currentLevel = 0;
-            string bankAmount = "$0";
-            bool walked = false;
-            bool gameOver = false;
-            while (currentLevel < 15 && !gameOver && !walked)
+            int currentLevel = 0;//current money
+            string bankAmount = "$0";//moeny gaurnteed form safe havens
+            bool walked = false;//if the decide to walk away with moeny or not
+            bool gameOver = false;//if game is over
+            while (currentLevel < 15 && !gameOver && !walked)//keep playing untill all 15 done, game over or wrong asnwer
             {
                 Console.Clear();
 
                 // Draw money ladder on the right
                 Console.SetCursorPosition(50, 0);
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine("   MONEY LADDER");
-                for (int m = 14; m >= 0; m--)
+                Console.WriteLine("   MONEY LADDER");//i found this money ladder section online
+                for (int m = 14; m >= 0; m--)//loop from 1million to 100 dollars
                 {
                     Console.SetCursorPosition(50, 15 - m);
                     if (m == currentLevel)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write($">> ");
+                        Console.Write($">> ");//arrow moves when the level changes
                     }
                     else if (safeHavens.Contains(m))
                     {
@@ -283,22 +288,71 @@ namespace Millionaire
                     Console.WriteLine($"{m + 1,2}. {ladder[m],12}");
                 }
                 Console.ResetColor();
-                Console.ReadLine();
 
+                //display the question and answers on the left side of the screen
+                Console.SetCursorPosition(0, 0);
+                Question q = shuffledQ[currentLevel];// get current question
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"Question {currentLevel + 1} - Playing for {ladder[currentLevel]}");
+                Console.WriteLine($"Banked amount: {bankAmount}");
+                Console.ResetColor();
+                Console.WriteLine($"{q.question}");
+                Console.WriteLine($"A: {q.optionA}");
+                Console.WriteLine($"B: {q.optionB}");
+                Console.WriteLine($"C: {q.optionC}");
+                Console.WriteLine($"D: {q.optionD}");
+                string answer = Console.ReadLine().ToUpper();//read the input and change it to upper case
 
+                if (answer == "W")
+                {
+                    walked = true;
+                }
 
+                else if (answer == q.answer)//correct asnwer
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"\nCorrect! You've won {ladder[currentLevel]}!");
+                    Console.ResetColor();
 
-
-
-
-
-
-
-
-
+                    if (safeHavens.Contains(currentLevel))
+                    {
+                        bankAmount = ladder[currentLevel];
+                        Console.WriteLine($"Safe Haven Reached!!! {ladder[currentLevel]}");//safe haven add money to bank ammount
+                    }
+                    currentLevel++;
+                    Thread.Sleep(1500);
+                }
+                else
+                {
+                    Console.WriteLine($"\nWrong the correct asnwer was: {q.answer}");//incorrect answer finish game
+                    gameOver = true;
+                    Thread.Sleep(2000);
+                }
+                Console.Clear();
 
 
             }
+            //show final results
+            if (currentLevel == 15)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"CONGRATULATIONS {newfinal.firstname.ToUpper()} {newfinal.lastname.ToUpper()}!");
+                Console.WriteLine("YOU ARE A MILLIONAIRE!");
+                Console.ResetColor();
+            }
+            else if (walked)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"{newfinal.firstname} walked away with {ladder[currentLevel - 1]}!");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Wrong answer! {newfinal.firstname} goes home with {bankAmount}!");
+                Console.ResetColor();
+            }
+            Console.ReadLine();
         }
     }
 
