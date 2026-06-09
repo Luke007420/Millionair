@@ -8,6 +8,15 @@ namespace Millionaire
         public string lastname;
         public string interest;
     }
+    public struct Question
+    {
+        public string question;
+        public string optionA;
+        public string optionB;
+        public string optionC;
+        public string optionD;
+        public string answer;
+    }
     internal class Program
     {
         static void Main(string[] args)
@@ -28,6 +37,22 @@ namespace Millionaire
                 count++;
             }
             sr.Close();
+
+
+            Question[] questions = new Question[20];
+            int qcount = 0;
+            StreamReader qr = new StreamReader(@"Questions.txt");
+            while (!qr.EndOfStream)
+            {
+                questions[qcount].question = qr.ReadLine();
+                questions[qcount].optionA = qr.ReadLine();
+                questions[qcount].optionB = qr.ReadLine();
+                questions[qcount].optionC = qr.ReadLine();
+                questions[qcount].optionD = qr.ReadLine();
+                questions[qcount].answer = qr.ReadLine();
+                qcount++;
+            }
+            qr.Close();
 
             int choice;
 
@@ -84,7 +109,7 @@ namespace Millionaire
                     case 2:
                         Edit(student); break;
                     case 3:
-                        Finalists(student); break;
+                        Finalists(student,questions); break;
                     //case 4:
                     //    task4(); break;
                     case 0:
@@ -142,10 +167,6 @@ namespace Millionaire
             }
             Console.ReadLine();
         }
-        public static void Chosen()
-        {
-
-        }
         public static void Edit(Students[] student)
         {
             bool found = false;
@@ -184,54 +205,101 @@ namespace Millionaire
             sw.Close();
         }
 
-        public static void Finalists(Students[] students)
+        public static void Finalists(Students[] students, Question[] questions)
         {
             Random rand = new Random();
-            int[] chosen = new int[10];
-            int count = 0;
-
-            while (count < 10)
-            {
-                bool dublicate = false;
-                int final = rand.Next(0, students.Length);
-                for (int i = 0; i <count; i++)
-                {
-                    if (chosen[i] == final)
-                    {
-                        dublicate = true;
-                    }
-    
-                }
-                if (!dublicate)
-                {
-                    chosen[count] = final;
-                    count++;
-                }
-            }
+            Students[] shuffled = students.OrderBy(s => rand.Next()).ToArray();// shuffles students and sorts them in alphabeical order
             Console.WriteLine("We are getting your finalists...");
             Thread.Sleep(2000);
             Console.WriteLine("These are your finalists");
             Console.WriteLine("First Name:\t\tLast Name:\t\tInterests:");
             for (int i = 0; i < 10; i++)
             {
-                
-                Console.WriteLine($"{students[chosen[i]].firstname.PadRight(8)}\t\t{students[chosen[i]].lastname.PadRight(8)}\t\t{students[chosen[i]].interest.PadRight(8)}");
-                
+
+                Console.WriteLine($"{shuffled[i].firstname.PadRight(8)}\t\t{shuffled[i].lastname.PadRight(8)}\t\t{shuffled[i].interest.PadRight(8)}");//selsects 10 out of random of the students
+
             }
-            Console.ReadLine();
             Thread.Sleep(2000);
             Console.WriteLine("This is your finalists");
-            
+            Console.WriteLine("First Name:\t\tLast Name:\t\tInterests:");
+            Students newfinal = shuffled[rand.Next(10)];//picks one out of random of the shuffled students we set earlier
+            Console.WriteLine($"{newfinal.firstname}\t\t\t{newfinal.lastname}\t\t\t{newfinal.interest}");
+            Console.ReadLine();
+
+            string[] ladder =
+            {
+                "$100", "$200", "$300", "$500", "$1,000",
+                "$2,000", "$4,000", "$8,000", "$16,000", "$32,000",
+                "$64,000", "$125,000", "$250,000", "$500,000", "$1,000,000"
+            };//money system for game
+
+            //safe havens for money like in the game useing indexes, 4 and 9 or $1,000 and $32,000
+            int[] safeHavens = { 4, 9 };
+            Question[] shuffledQ = questions.OrderBy(q => rand.Next()).ToArray();
+
+            int currentLevel = 0;
+            string bankAmount = "$0";
+            bool walked = false;
+            bool gameOver = false;
+            while (currentLevel < 15 && !gameOver && !walked)
+            {
+                Console.Clear();
+
+                // Draw money ladder on the right
+                Console.SetCursorPosition(50, 0);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("   MONEY LADDER");
+                for (int m = 14; m >= 0; m--)
+                {
+                    Console.SetCursorPosition(50, 15 - m);
+                    if (m == currentLevel)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write($">> ");
+                    }
+                    else if (safeHavens.Contains(m))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write($"   ");
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write($"   ");
+                    }
+
+                    if (safeHavens.Contains(m))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                    }
+                    else if (m == currentLevel)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                    }
+                    Console.WriteLine($"{m + 1,2}. {ladder[m],12}");
+                }
+                Console.ResetColor();
+                Console.ReadLine();
 
 
-            
-
-            
 
 
 
 
 
+
+
+
+
+
+
+
+            }
         }
     }
+
 }
