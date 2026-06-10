@@ -359,7 +359,6 @@ namespace Millionaire
                         }
                         wrongOptions = wrongOptions.OrderBy(x => rand.Next()).ToArray();
                         
-                        Console.WriteLine(q.question);
                         if (q.answer == "A" || wrongOptions[0] == "A")
                         {
                             Console.WriteLine($"A: {q.optionA}");
@@ -424,7 +423,41 @@ namespace Millionaire
                 }
                 else if (answer == "2")
                 {
-                    // phone a friend
+                    if (!phone)
+                    {
+                        phone = true;
+                        Console.WriteLine("The phone is ringing...");
+                        Thread.Sleep(2000);
+                        Console.WriteLine($"Your Friend has told you that {q.answer} is the correct answer");
+
+                        answer = Console.ReadLine().ToUpper();
+
+                        if (answer == q.answer)//correct asnwer
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"\nCorrect! You've won {ladder[currentLevel]}!");
+                            Console.ResetColor();
+
+                            if (safeHavens.Contains(currentLevel))
+                            {
+                                bankAmount = ladder[currentLevel];
+                                Console.WriteLine($"Safe Haven Reached!!! {ladder[currentLevel]}");//safe haven add money to bank ammount
+                            }
+                            currentLevel++;
+                            Thread.Sleep(1500);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nWrong the correct asnwer was: {q.answer}");//incorrect answer finish game
+                            gameOver = true;
+                            Thread.Sleep(2000);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry this has already been used");
+                    }
+
                 }
                 else if (answer == "3")
                 {
