@@ -238,15 +238,15 @@ namespace Millionaire
                 "$64,000", "$125,000", "$250,000", "$500,000", "$1,000,000"
             };//money system for game
 
-            //safe havens for money like in the game useing indexes, 4 and 9 or $1,000 and $32,000
+            //safe havens for money like in the game using indexes, 4 and 9 or $1,000 and $32,000
             int[] safeHavens = { 4, 9 };
             Question[] shuffledQ = questions.OrderBy(q => rand.Next()).ToArray();
 
             int currentLevel = 0;//current money
-            string bankAmount = "$0";//moeny gaurnteed form safe havens
-            bool walked = false;//if the decide to walk away with moeny or not
+            string bankAmount = "$0";//money gaurnteed form safe havens
+            bool walked = false;//if the decide to walk away with money or not
             bool gameOver = false;//if game is over
-            while (currentLevel < 15 && !gameOver && !walked)//keep playing untill all 15 done, game over or wrong asnwer
+            while (currentLevel < 15 && !gameOver && !walked)//keep playing until all 15 done, game over or wrong answer
             {
                 Console.Clear();
 
@@ -308,7 +308,7 @@ namespace Millionaire
                     walked = true;
                 }
 
-                else if (answer == q.answer)//correct asnwer
+                else if (answer == q.answer)//correct answer
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"\nCorrect! You've won {ladder[currentLevel]}!");
@@ -322,9 +322,9 @@ namespace Millionaire
                     currentLevel++;
                     Thread.Sleep(1500);
                 }
-                else
+                else if (answer != q.answer) 
                 {
-                    Console.WriteLine($"\nWrong the correct asnwer was: {q.answer}");//incorrect answer finish game
+                    Console.WriteLine($"\nWrong the correct answer was: {q.answer}");//incorrect answer finish game
                     gameOver = true;
                     Thread.Sleep(2000);
                 }
