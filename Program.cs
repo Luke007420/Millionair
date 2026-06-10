@@ -246,7 +246,8 @@ namespace Millionaire
             string bankAmount = "$0";//money gaurnteed form safe havens
             bool walked = false;//if the decide to walk away with money or not
             bool gameOver = false;//if game is over
-            while (currentLevel < 15 && !gameOver && !walked)//keep playing until all 15 done, game over or wrong answer
+            bool fiftyfifty = false, phone = false, audience = false;
+            while (currentLevel < 15 && !gameOver && !walked)//keep playing untill all 15 done, game over or wrong asnwer
             {
                 Console.Clear();
 
@@ -301,11 +302,166 @@ namespace Millionaire
                 Console.WriteLine($"B: {q.optionB}");
                 Console.WriteLine($"C: {q.optionC}");
                 Console.WriteLine($"D: {q.optionD}");
+                Console.WriteLine("Life Lines");
+                if (!fiftyfifty)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("[1][50/50]");
+                    Console.ResetColor();
+                    
+                }
+                if (!phone)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("[2][Phone a Freind]");
+                    Console.ResetColor();
+                }
+                if (!audience)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("[3][Ask the Aduience]");
+                    Console.ResetColor();
+                }
                 string answer = Console.ReadLine().ToUpper();//read the input and change it to upper case
 
                 if (answer == "W")
                 {
                     walked = true;
+                }
+                else if (answer == "1")
+                {
+                    if (!fiftyfifty)
+                    {
+                        string[] wrongOptions = new string[3];
+                        int wrongCount = 0;
+                        Console.WriteLine("50/50 lifeline activated!");
+                        fiftyfifty = true;
+
+                        if (q.answer != "A")
+                        {
+                            wrongOptions[wrongCount] = "A";
+                            wrongCount++;
+                        }
+                        if (q.answer != "B")
+                        {
+                            wrongOptions[wrongCount] = "B";
+                            wrongCount++;
+                        }
+                        if (q.answer != "C")
+                        {
+                            wrongOptions[wrongCount] = "C";
+                            wrongCount++;
+                        }
+                        if (q.answer != "D")
+                        {
+                            wrongOptions[wrongCount] = "D";
+                            wrongCount++;
+                        }
+                        wrongOptions = wrongOptions.OrderBy(x => rand.Next()).ToArray();
+                        
+                        if (q.answer == "A" || wrongOptions[0] == "A")
+                        {
+                            Console.WriteLine($"A: {q.optionA}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("A: -----");
+                        }
+                        if (q.answer == "B" || wrongOptions[0] == "B")
+                        {
+                            Console.WriteLine($"B: {q.optionB}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("B: -----");
+                        }
+                        if (q.answer == "C" || wrongOptions[0] == "C")
+                        {
+                            Console.WriteLine($"C: {q.optionC}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("C: -----");
+                        }
+                        if (q.answer == "D" || wrongOptions[0] == "D")
+                        {
+                            Console.WriteLine($"D: {q.optionD}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("D: -----");
+                        }
+
+                        answer = Console.ReadLine().ToUpper();
+
+                        if (answer == q.answer)//correct asnwer
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"\nCorrect! You've won {ladder[currentLevel]}!");
+                            Console.ResetColor();
+
+                            if (safeHavens.Contains(currentLevel))
+                            {
+                                bankAmount = ladder[currentLevel];
+                                Console.WriteLine($"Safe Haven Reached!!! {ladder[currentLevel]}");//safe haven add money to bank ammount
+                            }
+                            currentLevel++;
+                            Thread.Sleep(1500);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nWrong the correct asnwer was: {q.answer}");//incorrect answer finish game
+                            gameOver = true;
+                            Thread.Sleep(2000);
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry this has already been used");
+                    }
+                }
+                else if (answer == "2")
+                {
+                    if (!phone)
+                    {
+                        phone = true;
+                        Console.WriteLine("The phone is ringing...");
+                        Thread.Sleep(2000);
+                        Console.WriteLine($"Your Friend has told you that {q.answer} is the correct answer");
+
+                        answer = Console.ReadLine().ToUpper();
+
+                        if (answer == q.answer)//correct asnwer
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"\nCorrect! You've won {ladder[currentLevel]}!");
+                            Console.ResetColor();
+
+                            if (safeHavens.Contains(currentLevel))
+                            {
+                                bankAmount = ladder[currentLevel];
+                                Console.WriteLine($"Safe Haven Reached!!! {ladder[currentLevel]}");//safe haven add money to bank ammount
+                            }
+                            currentLevel++;
+                            Thread.Sleep(1500);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nWrong the correct asnwer was: {q.answer}");//incorrect answer finish game
+                            gameOver = true;
+                            Thread.Sleep(2000);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry this has already been used");
+                    }
+
+                }
+                else if (answer == "3")
+                {
+                    // ask the audience
                 }
 
                 else if (answer == q.answer)//correct answer
