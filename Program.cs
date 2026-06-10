@@ -313,13 +313,13 @@ namespace Millionaire
                 if (!phone)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("[2][Phone a Freind]");
+                    Console.WriteLine("[2][Phone a Friend]");
                     Console.ResetColor();
                 }
                 if (!audience)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("[3][Ask the Aduience]");
+                    Console.WriteLine("[3][Ask the Audience]");
                     Console.ResetColor();
                 }
                 string answer = Console.ReadLine().ToUpper();//read the input and change it to upper case
@@ -394,7 +394,7 @@ namespace Millionaire
 
                         answer = Console.ReadLine().ToUpper();
 
-                        if (answer == q.answer)//correct asnwer
+                        if (answer == q.answer)//correct answer
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"\nCorrect! You've won {ladder[currentLevel]}!");
@@ -403,14 +403,14 @@ namespace Millionaire
                             if (safeHavens.Contains(currentLevel))
                             {
                                 bankAmount = ladder[currentLevel];
-                                Console.WriteLine($"Safe Haven Reached!!! {ladder[currentLevel]}");//safe haven add money to bank ammount
+                                Console.WriteLine($"Safe Haven Reached!!! {ladder[currentLevel]}");//safe haven add money to bank amount
                             }
                             currentLevel++;
                             Thread.Sleep(1500);
                         }
-                        else
+                        else if (answer != q.answer)
                         {
-                            Console.WriteLine($"\nWrong the correct asnwer was: {q.answer}");//incorrect answer finish game
+                            Console.WriteLine($"\nWrong the correct answer was: {q.answer}");//incorrect answer finish game
                             gameOver = true;
                             Thread.Sleep(2000);
                         }
@@ -446,9 +446,9 @@ namespace Millionaire
                             currentLevel++;
                             Thread.Sleep(1500);
                         }
-                        else
+                        else if (answer != q.answer)
                         {
-                            Console.WriteLine($"\nWrong the correct asnwer was: {q.answer}");//incorrect answer finish game
+                            Console.WriteLine($"\nWrong the correct answer was: {q.answer}");//incorrect answer finish game
                             gameOver = true;
                             Thread.Sleep(2000);
                         }
@@ -461,7 +461,14 @@ namespace Millionaire
                 }
                 else if (answer == "3")
                 {
-                    // ask the audience
+                    if (!phone)
+                    {
+                        phone = true;
+                        Console.WriteLine("Asking the Audience...");
+                        Thread.Sleep(2000);
+                    }
+                    
+
                 }
 
                 else if (answer == q.answer)//correct answer
