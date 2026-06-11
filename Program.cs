@@ -461,11 +461,70 @@ namespace Millionaire
                 }
                 else if (answer == "3")
                 {
-                    if (!phone)
+                    if (!audience)
                     {
-                        phone = true;
+                        audience = true;
                         Console.WriteLine("Asking the Audience...");
                         Thread.Sleep(2000);
+                        int correctpercent = rand.Next(70,100);
+                        int remainder = 100 - correctpercent;
+                        int left1 = rand.Next(0, remainder);
+                        int left2 = rand.Next(0, remainder - left1);
+                        int left3 = remainder - left1 - left2;
+                        if (q.answer == "A")
+                        {
+                            Console.WriteLine($"A:{q.optionA} {correctpercent}%");
+                            Console.WriteLine($"B:{q.optionB} {left1}%");
+                            Console.WriteLine($"C:{q.optionC} {left2}%");
+                            Console.WriteLine($"D:{q.optionD} {left3}%");
+                        }
+                        else if (q.answer == "B")
+                        {
+                            Console.WriteLine($"A:{q.optionA} {left1}%");
+                            Console.WriteLine($"B:{q.optionB} {correctpercent}%");
+                            Console.WriteLine($"C:{q.optionC} {left2}%");
+                            Console.WriteLine($"D:{q.optionD} {left3}");
+                        }
+                        else if (q.answer == "C")
+                        {
+                            Console.WriteLine($"A:{q.optionA} {left2}%");
+                            Console.WriteLine($"B:{q.optionB} {left1}%");
+                            Console.WriteLine($"C:{q.optionC} {correctpercent}%");
+                            Console.WriteLine($"D:{q.optionD} {left3}%");
+                        }
+                        else if (q.answer == "D")
+                        {
+                            Console.WriteLine($"A:{q.optionA} {left3}%");
+                            Console.WriteLine($"B:{q.optionB} {left1}%");
+                            Console.WriteLine($"C:{q.optionC} {left2}%");
+                            Console.WriteLine($"D:{q.optionD} {correctpercent}%");
+                        }
+                        answer = Console.ReadLine().ToUpper();
+
+                        if (answer == q.answer)//correct asnwer
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"\nCorrect! You've won {ladder[currentLevel]}!");
+                            Console.ResetColor();
+
+                            if (safeHavens.Contains(currentLevel))
+                            {
+                                bankAmount = ladder[currentLevel];
+                                Console.WriteLine($"Safe Haven Reached!!! {ladder[currentLevel]}");//safe haven add money to bank ammount
+                            }
+                            currentLevel++;
+                            Thread.Sleep(1500);
+                        }
+                        else if (answer != q.answer)
+                        {
+                            Console.WriteLine($"\nWrong the correct answer was: {q.answer}");//incorrect answer finish game
+                            gameOver = true;
+                            Thread.Sleep(2000);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry this has already been used");
                     }
                     
 
