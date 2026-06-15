@@ -303,7 +303,7 @@ namespace Millionaire
                 Console.WriteLine($"C: {q.optionC}");
                 Console.WriteLine($"D: {q.optionD}");
                 Console.WriteLine("Life Lines");
-                if (!fiftyfifty)
+                if (!fiftyfifty)// prints out lifelines to the screen
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("[1][50/50]");
